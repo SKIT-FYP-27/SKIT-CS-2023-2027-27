@@ -20,14 +20,16 @@ env/
 .ipynb_checkpoints/
 
 # ML datasets - do not commit raw/processed data files
-ml-service/data/raw/**/*.csv
-ml-service/data/raw/**/*.zip
-ml-service/data/raw/**/*.xlsx
-ml-service/data/processed/**/*.csv
+ML_Service/data/raw/**/*.csv
+ML_Service/data/raw/**/*.zip
+ML_Service/data/raw/**/*.xlsx
+ML_Service/data/raw/**/*.sql
+ML_Service/data/raw/synthetic/*.sql
+ML_Service/data/processed/**/*.csv
 
 # ML model binaries - regenerate locally from training scripts
-ml-service/models/**/*.joblib
-ml-service/models/**/*.pkl
+ML_Service/models/**/*.joblib
+ML_Service/models/**/*.pkl
 
 # Environment variables
 .env
@@ -37,7 +39,6 @@ ml-service/models/**/*.pkl
 Thumbs.db
 
 # Keep ML documentation and metadata tracked
-!ml-service/data/raw/**/README.md
-!ml-service/data/processed/README.md
-!ml-service/models/README.mdml-service/data/raw/**/*.sql
-ml-service/data/raw/synthetic/*.sql
+!ML_Service/data/raw/**/README.md
+!ML_Service/data/processed/README.md
+!ML_Service/models/README.md
