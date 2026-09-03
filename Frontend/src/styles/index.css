@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-paper text-ink font-body antialiased;
+  }
+  h1, h2, h3 {
+    @apply font-display text-navy;
+  }
+  ::selection {
+    @apply bg-gold-light/40;
+  }
+  *:focus-visible {
+    outline: 2px solid theme('colors.gold.DEFAULT');
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .panel {
+    @apply border border-line bg-white/60 rounded;
+  }
+  .stat-label {
+    @apply text-xs text-slate tracking-normal;
+  }
+}
