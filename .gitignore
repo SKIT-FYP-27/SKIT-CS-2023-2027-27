@@ -5,3 +5,32 @@ __pycache__/
 *.pyc
 *.log
 .vscode/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Raw datasets
+ml-service/data/raw/
+
+# Generated/processed data
+ml-service/data/processed/
+
+# Trained models
+ml-service/models/
+
+# Environment variables
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
