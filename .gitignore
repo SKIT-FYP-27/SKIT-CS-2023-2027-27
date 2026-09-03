@@ -19,14 +19,15 @@ env/
 # Jupyter
 .ipynb_checkpoints/
 
-# Raw datasets
-ml-service/data/raw/
+# ML datasets - do not commit raw/processed data files
+ml-service/data/raw/**/*.csv
+ml-service/data/raw/**/*.zip
+ml-service/data/raw/**/*.xlsx
+ml-service/data/processed/**/*.csv
 
-# Generated/processed data
-ml-service/data/processed/
-
-# Trained models
-ml-service/models/
+# ML model binaries - regenerate locally from training scripts
+ml-service/models/**/*.joblib
+ml-service/models/**/*.pkl
 
 # Environment variables
 .env
@@ -34,3 +35,9 @@ ml-service/models/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Keep ML documentation and metadata tracked
+!ml-service/data/raw/**/README.md
+!ml-service/data/processed/README.md
+!ml-service/models/README.mdml-service/data/raw/**/*.sql
+ml-service/data/raw/synthetic/*.sql
