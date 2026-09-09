@@ -36,6 +36,11 @@ explainer = shap.TreeExplainer(model)
 # --------------------------------------------------
 
 def get_risk_level(probability):
+    """
+    Convert predicted risk probability into an application-level
+    risk category.
+    """
+
     if probability >= 0.75:
         return "CRITICAL"
     elif probability >= 0.50:
@@ -44,6 +49,57 @@ def get_risk_level(probability):
         return "MEDIUM"
     else:
         return "LOW"
+
+
+# --------------------------------------------------
+# Prediction response validation
+# --------------------------------------------------
+
+def validate_prediction_result(result):
+    """
+    Validate the structure and values of a prediction result.
+    """
+
+    required_fields = {
+        "predicted_at_risk",
+        "risk_probability",
+        "risk_level",
+        "top_factors",
+    }
+
+    missing_fields = required_fields - result.keys()
+
+    if missing_fields:
+        raise ValueError(
+            f"Prediction result is missing fields: {missing_fields}"
+        )
+
+    if result["predicted_at_risk"] not in (0, 1):
+        raise ValueError(
+            "predicted_at_risk must be either 0 or 1."
+        )
+
+    if not 0 <= result["risk_probability"] <= 1:
+        raise ValueError(
+            "risk_probability must be between 0 and 1."
+        )
+
+    valid_levels = {
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+        "CRITICAL",
+    }
+
+    if result["risk_level"] not in valid_levels:
+        raise ValueError(
+            f"risk_level must be one of {valid_levels}."
+        )
+
+    if not isinstance(result["top_factors"], list):
+        raise ValueError(
+            "top_factors must be a list."
+        )
 
 
 # --------------------------------------------------
@@ -102,7 +158,7 @@ def validate_inputs(
         raise ValueError(
             "overall_attendance must be between 0 and 100."
         )
-    
+
 
 # --------------------------------------------------
 # Prediction function
@@ -117,22 +173,29 @@ def predict_risk(
     Predict academic risk and explain the prediction.
     """
 
+    # Validate input values
     validate_inputs(
         current_semester,
         current_cgpa,
         overall_attendance,
     )
 
+    # Prepare model input
     input_data = pd.DataFrame(
-        [{
-            "current_semester": current_semester,
-            "current_cgpa": current_cgpa,
-            "overall_attendance": overall_attendance,
-        }],
+        [
+            {
+                "current_semester": current_semester,
+                "current_cgpa": current_cgpa,
+                "overall_attendance": overall_attendance,
+            }
+        ],
         columns=features,
     )
 
+    # --------------------------------------------------
     # Prediction
+    # --------------------------------------------------
+
     probability = float(
         model.predict_proba(input_data)[0][1]
     )
@@ -143,7 +206,10 @@ def predict_risk(
 
     risk_level = get_risk_level(probability)
 
+    # --------------------------------------------------
     # SHAP explanation
+    # --------------------------------------------------
+
     shap_values = get_positive_class_shap(input_data)
 
     explanations = []
@@ -153,16 +219,18 @@ def predict_risk(
         input_data.iloc[0],
         shap_values,
     ):
-        explanations.append({
-            "feature": feature,
-            "value": float(value),
-            "shap_value": round(float(shap_value), 6),
-            "direction": (
-                "increases risk"
-                if shap_value > 0
-                else "decreases risk"
-            ),
-        })
+        explanations.append(
+            {
+                "feature": feature,
+                "value": float(value),
+                "shap_value": round(float(shap_value), 6),
+                "direction": (
+                    "increases risk"
+                    if shap_value > 0
+                    else "decreases risk"
+                ),
+            }
+        )
 
     # Most influential factors first
     explanations.sort(
@@ -170,12 +238,21 @@ def predict_risk(
         reverse=True,
     )
 
-    return {
+    # --------------------------------------------------
+    # Build prediction result
+    # --------------------------------------------------
+
+    result = {
         "predicted_at_risk": prediction,
         "risk_probability": round(probability, 4),
         "risk_level": risk_level,
         "top_factors": explanations,
     }
+
+    # Validate the final response structure
+    validate_prediction_result(result)
+
+    return result
 
 
 # --------------------------------------------------
