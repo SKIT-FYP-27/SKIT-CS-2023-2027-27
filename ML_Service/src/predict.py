@@ -76,6 +76,35 @@ def get_positive_class_shap(input_data):
 
 
 # --------------------------------------------------
+# Input validation
+# --------------------------------------------------
+
+def validate_inputs(
+    current_semester,
+    current_cgpa,
+    overall_attendance,
+):
+    """
+    Validate student academic inputs before prediction.
+    """
+
+    if not 1 <= current_semester <= 6:
+        raise ValueError(
+            "current_semester must be between 1 and 6."
+        )
+
+    if not 0 <= current_cgpa <= 10:
+        raise ValueError(
+            "current_cgpa must be between 0 and 10."
+        )
+
+    if not 0 <= overall_attendance <= 100:
+        raise ValueError(
+            "overall_attendance must be between 0 and 100."
+        )
+    
+
+# --------------------------------------------------
 # Prediction function
 # --------------------------------------------------
 
@@ -87,6 +116,12 @@ def predict_risk(
     """
     Predict academic risk and explain the prediction.
     """
+
+    validate_inputs(
+        current_semester,
+        current_cgpa,
+        overall_attendance,
+    )
 
     input_data = pd.DataFrame(
         [{
