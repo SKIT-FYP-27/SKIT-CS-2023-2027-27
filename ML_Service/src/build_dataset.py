@@ -11,14 +11,14 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 RAW_SQL = (
     PROJECT_ROOT
-    / "ml-service"
+    / "ML_Service"
     / "data"
     / "raw"
     / "synthetic"
     / "UEI_COMPLETE_FINAL_DATASET.sql"
 )
 
-OUTPUT_DIR = PROJECT_ROOT / "ml-service" / "data" / "processed"
+OUTPUT_DIR = PROJECT_ROOT / "ML_Service" / "data" / "processed"
 OUTPUT_FILE = OUTPUT_DIR / "uei_risk_dataset.csv"
 
 

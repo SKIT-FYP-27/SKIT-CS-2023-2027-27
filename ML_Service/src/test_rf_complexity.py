@@ -5,7 +5,7 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 from sklearn.model_selection import train_test_split
 
 
-DATA_PATH = "ml-service/data/processed/uei_risk_dataset.csv"
+DATA_PATH = "ML_Service/data/processed/uei_risk_dataset.csv"
 
 FEATURES = [
     "current_semester",
