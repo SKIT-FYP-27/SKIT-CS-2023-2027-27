@@ -1,0 +1,13 @@
+id,user_id,employee_id,name,department,designation,specialization,phone
+fe5c93f6-e5a4-508d-aa3d-61d3961e79b6,3f8d0a69-9c37-5997-a0bf-41068e75c552,FAC2026001,Dr. Rajesh Sharma,Computer Science & Engineering,Assistant Professor,Data Structures & Algorithms,+91-90100000001
+aea15467-f034-51f8-bc1b-18594762d5ce,b14ca183-aef1-5b53-b572-d75dc13b749f,FAC2026002,Dr. Neha Verma,Computer Science & Engineering,Assistant Professor,Database Systems,+91-90200000002
+c21ecdfa-6821-58f3-80ad-01ad42723c64,3a526dc3-146e-5ffc-9315-062370b55289,FAC2026003,Dr. Amit Gupta,Computer Science & Engineering,Assistant Professor,Artificial Intelligence,+91-90300000003
+a4aa6329-cf7f-5e3f-958c-df3fbeeac2f0,3efbfef5-ee14-582e-9691-62516b88f88c,FAC2026004,Dr. Priya Mehta,Computer Science & Engineering,Assistant Professor,Machine Learning,+91-90400000004
+096bae8a-b448-52a4-b11b-94f573db47d7,d06e0abd-0d7e-5e36-9a91-46be44f931d8,FAC2026005,Dr. Sandeep Jain,Computer Science & Engineering,Assistant Professor,Computer Networks,+91-90500000005
+e22bf2b6-38c3-5617-9c4a-0acd181581d6,48ef41c7-bbff-5f87-b56f-570ccea26950,FAC2026006,Dr. Ritu Singh,Computer Science & Engineering,Assistant Professor,Operating Systems,+91-90600000006
+15ca48fc-df67-512c-815e-c085107e9c59,c173ff3c-1543-5c6c-8821-75aad7b210e2,FAC2026007,Dr. Vivek Agarwal,Computer Science & Engineering,Assistant Professor,Cloud Computing,+91-90700000007
+be990cb0-426f-5d38-9745-d477c185f5eb,8c6bfa7d-5e64-512a-aeb0-43a0d78163b4,FAC2026008,Dr. Pooja Saini,Computer Science & Engineering,Assistant Professor,Cyber Security,+91-90800000008
+d0409be6-f753-5863-8426-94a84553a16e,7844ee63-a322-5723-882c-a984caaf4208,FAC2026009,Dr. Manish Bansal,Computer Science & Engineering,Assistant Professor,Data Engineering,+91-90900000009
+d800e811-1ab0-565d-8548-728e67072757,63e493b4-8963-5e29-bd63-61ca6035186a,FAC2026010,Dr. Anjali Rathore,Computer Science & Engineering,Assistant Professor,Software Engineering,+91-91000000010
+3a618d80-06ca-5715-898b-c91424935f9c,cd9a47eb-3613-5a16-8f38-40c2de409760,FAC2026011,Dr. Karan Mathur,Computer Science & Engineering,Assistant Professor,Computer Architecture,+91-91100000011
+b84eb5f1-c2a0-59d4-9839-df45cf02a21f,0ffc5b94-4fc1-56fb-a831-43237ffc5447,FAC2026012,Dr. Nidhi Sharma,Computer Science & Engineering,Assistant Professor,Web Technologies,+91-91200000012

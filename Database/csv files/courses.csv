@@ -1,0 +1,41 @@
+id,code,title,semester,credits,type,description
+817d9a6f-e405-58f8-991b-373c31bd4e25,CS101,Programming Fundamentals,1,4,THEORY,Programming Fundamentals for CSE Semester 1. Synthetic academic master data for UEI development and analytics.
+325f5f11-db40-5f00-816d-d66357e36c70,CS102,Discrete Mathematics,1,4,THEORY,Discrete Mathematics for CSE Semester 1. Synthetic academic master data for UEI development and analytics.
+945cbb28-3a50-5ed1-8e70-c416ee3f92f0,CS103,Digital Logic,1,4,THEORY,Digital Logic for CSE Semester 1. Synthetic academic master data for UEI development and analytics.
+cc6bfe47-d156-5f3c-a0a6-64be53ff1202,CS104,Communication Skills,1,3,THEORY,Communication Skills for CSE Semester 1. Synthetic academic master data for UEI development and analytics.
+c697ab81-ffed-5fa6-9b51-be0954571d20,CS105,Engineering Mathematics-I,1,3,LAB,Engineering Mathematics-I for CSE Semester 1. Synthetic academic master data for UEI development and analytics.
+5ceb5573-0231-5d70-848b-193fcfdb644c,CS106,Data Structures,2,4,THEORY,Data Structures for CSE Semester 2. Synthetic academic master data for UEI development and analytics.
+c8e42f25-4acd-5f8b-8bce-f0cab27cc71f,CS107,Database Management Systems,2,4,THEORY,Database Management Systems for CSE Semester 2. Synthetic academic master data for UEI development and analytics.
+5297007a-130e-5341-af7a-4e9027c2dadf,CS108,Computer Organization,2,4,THEORY,Computer Organization for CSE Semester 2. Synthetic academic master data for UEI development and analytics.
+f27d152a-f613-51a3-aea8-0506e5d24c3a,CS109,Object Oriented Programming,2,3,THEORY,Object Oriented Programming for CSE Semester 2. Synthetic academic master data for UEI development and analytics.
+f8b6ad01-594d-5e52-b325-ed9eb13211e1,CS110,Engineering Mathematics-II,2,3,LAB,Engineering Mathematics-II for CSE Semester 2. Synthetic academic master data for UEI development and analytics.
+4f40fe7b-0f58-50c8-a8ba-d900ce500bf5,CS201,Operating Systems,3,4,THEORY,Operating Systems for CSE Semester 3. Synthetic academic master data for UEI development and analytics.
+8f83553f-2110-548d-99ab-608af2fa910e,CS202,Computer Networks,3,4,THEORY,Computer Networks for CSE Semester 3. Synthetic academic master data for UEI development and analytics.
+4c3c9c46-363c-5d2d-9f8c-6c6fb93b6841,CS203,Design and Analysis of Algorithms,3,4,THEORY,Design and Analysis of Algorithms for CSE Semester 3. Synthetic academic master data for UEI development and analytics.
+28c5f6d1-a5f4-5b3a-881c-9c8bb402cded,CS204,Software Engineering,3,3,THEORY,Software Engineering for CSE Semester 3. Synthetic academic master data for UEI development and analytics.
+97d0e514-ef26-5ab2-9c46-65c2c877e602,CS205,Probability and Statistics,3,3,LAB,Probability and Statistics for CSE Semester 3. Synthetic academic master data for UEI development and analytics.
+40d412e8-fc3b-5972-8ff2-90b35de8a2d3,CS206,Theory of Computation,4,4,THEORY,Theory of Computation for CSE Semester 4. Synthetic academic master data for UEI development and analytics.
+859db046-894d-53cc-8cb4-3643d0c7f1fe,CS207,Web Technologies,4,4,THEORY,Web Technologies for CSE Semester 4. Synthetic academic master data for UEI development and analytics.
+a71f945b-22bf-5921-85a0-cb1acd7cb2e6,CS208,Artificial Intelligence,4,4,THEORY,Artificial Intelligence for CSE Semester 4. Synthetic academic master data for UEI development and analytics.
+21e87180-7538-5689-922d-8889674702ed,CS209,Compiler Design,4,3,THEORY,Compiler Design for CSE Semester 4. Synthetic academic master data for UEI development and analytics.
+730c5632-33dc-5e69-a798-6135043a47aa,CS210,Advanced Database Systems,4,3,LAB,Advanced Database Systems for CSE Semester 4. Synthetic academic master data for UEI development and analytics.
+907aaef5-5595-57e1-9574-073b85a0ede6,CS301,Machine Learning,5,4,THEORY,Machine Learning for CSE Semester 5. Synthetic academic master data for UEI development and analytics.
+a0f36168-6bb1-5e4f-abe6-7bf93036fc61,CS302,Cloud Computing,5,4,THEORY,Cloud Computing for CSE Semester 5. Synthetic academic master data for UEI development and analytics.
+28cfcc87-623d-5ee1-9f4c-42a28c40abe5,CS303,Distributed Systems,5,4,THEORY,Distributed Systems for CSE Semester 5. Synthetic academic master data for UEI development and analytics.
+d6104478-80d9-5dd2-a5bb-8d51c48b9a53,CS304,Computer Graphics,5,3,THEORY,Computer Graphics for CSE Semester 5. Synthetic academic master data for UEI development and analytics.
+c04d1c79-289b-5b83-9dc1-e40a66e21cd4,CS305,Data Mining,5,3,LAB,Data Mining for CSE Semester 5. Synthetic academic master data for UEI development and analytics.
+539f9c66-84f9-5b19-943a-cb15d62bbc33,CS306,Big Data Analytics,6,4,THEORY,Big Data Analytics for CSE Semester 6. Synthetic academic master data for UEI development and analytics.
+005078bd-c539-5c44-a631-7e7dd9fb778c,CS307,Cyber Security,6,4,THEORY,Cyber Security for CSE Semester 6. Synthetic academic master data for UEI development and analytics.
+d9518e1b-06ba-5f43-b6b9-67d017eaae5d,CS308,DevOps Engineering,6,4,THEORY,DevOps Engineering for CSE Semester 6. Synthetic academic master data for UEI development and analytics.
+2bc3bd90-0760-5d47-9467-5a5992c412e5,CS309,Mobile Application Development,6,3,THEORY,Mobile Application Development for CSE Semester 6. Synthetic academic master data for UEI development and analytics.
+29f10515-0a52-55f4-896b-fa882e11e38e,CS310,Natural Language Processing,6,3,LAB,Natural Language Processing for CSE Semester 6. Synthetic academic master data for UEI development and analytics.
+916c09ed-2ed2-523c-938c-f8e5f802f260,CS401,Deep Learning,7,4,THEORY,Deep Learning for CSE Semester 7. Synthetic academic master data for UEI development and analytics.
+f2cb5a54-6c19-507f-a8f0-8dd18f6e2c08,CS402,Data Engineering,7,4,THEORY,Data Engineering for CSE Semester 7. Synthetic academic master data for UEI development and analytics.
+8391f5b8-9ea8-5557-ba62-b728639eebe4,CS403,Blockchain Technology,7,4,THEORY,Blockchain Technology for CSE Semester 7. Synthetic academic master data for UEI development and analytics.
+d78e91ae-45ad-5c9a-932f-a6be52b73d0b,CS404,Information Security,7,3,THEORY,Information Security for CSE Semester 7. Synthetic academic master data for UEI development and analytics.
+c9bc158e-cea8-5133-81ff-3e5a0015a1b7,CS405,Project Management,7,3,LAB,Project Management for CSE Semester 7. Synthetic academic master data for UEI development and analytics.
+c9c69745-223f-512c-8448-88da8488a9f6,CS406,Generative AI,8,4,THEORY,Generative AI for CSE Semester 8. Synthetic academic master data for UEI development and analytics.
+15e65b0c-f14f-508d-a7d7-1cdf7d982718,CS407,MLOps,8,4,THEORY,MLOps for CSE Semester 8. Synthetic academic master data for UEI development and analytics.
+a5ab8d3a-6096-5a0a-b913-7cbd32d975e1,CS408,Cloud Data Engineering,8,4,THEORY,Cloud Data Engineering for CSE Semester 8. Synthetic academic master data for UEI development and analytics.
+5a4439f1-3db8-51ba-994b-fd0c10a7db49,CS409,Advanced Computer Vision,8,3,THEORY,Advanced Computer Vision for CSE Semester 8. Synthetic academic master data for UEI development and analytics.
+7f45759d-0065-5dfe-823b-1c9e640db3f2,CS410,Major Project,8,3,LAB,Major Project for CSE Semester 8. Synthetic academic master data for UEI development and analytics.
