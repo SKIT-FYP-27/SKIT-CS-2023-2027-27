@@ -25,44 +25,71 @@ const NAV_BY_ROLE = {
   ],
 };
 
-export default function Sidebar() {
+export default function Sidebar({ open = false, onClose }) {
   const { user } = useAuth();
   const links = NAV_BY_ROLE[user?.role] ?? [];
 
   return (
-    <aside className="w-64 shrink-0 bg-navy text-white/90 min-h-screen flex flex-col">
-      <div className="px-6 py-7 border-b border-white/10">
-        <p className="font-display text-lg leading-tight text-white">
-          Unified Education
-          <br />
-          Interface
-        </p>
-        <p className="text-xs text-white/50 mt-1">CSE Department</p>
-      </div>
+    <>
+      {open && (
+        <button
+          type="button"
+          aria-label="Close navigation"
+          onClick={onClose}
+          className="fixed inset-0 z-20 bg-ink/40 md:hidden"
+        />
+      )}
 
-      <nav className="flex-1 px-3 py-5 space-y-0.5">
-        {links.map((link) => (
-          <NavLink
-            key={link.to}
-            to={link.to}
-            end={link.end}
-            className={({ isActive }) =>
-              `block px-3 py-2 text-sm rounded transition-colors ${
-                isActive
-                  ? "bg-white/10 text-white border-l-2 border-gold pl-[10px]"
-                  : "text-white/65 hover:text-white hover:bg-white/5"
-              }`
-            }
+      <aside
+        className={`fixed inset-y-0 left-0 z-30 w-64 shrink-0 bg-navy text-white/90 min-h-screen flex flex-col
+          transform transition-transform duration-200 ease-out
+          md:static md:translate-x-0
+          ${open ? "translate-x-0" : "-translate-x-full"}`}
+      >
+        <div className="px-6 py-7 border-b border-white/10 flex items-start justify-between">
+          <div>
+            <p className="font-display text-lg leading-tight text-white">
+              Unified Education
+              <br />
+              Interface
+            </p>
+            <p className="text-xs text-white/50 mt-1">CSE Department</p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close navigation"
+            className="md:hidden text-white/60 hover:text-white text-lg leading-none"
           >
-            {link.label}
-          </NavLink>
-        ))}
-      </nav>
+            ×
+          </button>
+        </div>
 
-      <div className="px-6 py-5 border-t border-white/10">
-        <p className="text-sm text-white">{user?.name}</p>
-        <p className="text-xs text-white/50 capitalize">{user?.role}</p>
-      </div>
-    </aside>
+        <nav className="flex-1 px-3 py-5 space-y-0.5">
+          {links.map((link) => (
+            <NavLink
+              key={link.to}
+              to={link.to}
+              end={link.end}
+              onClick={onClose}
+              className={({ isActive }) =>
+                `block px-3 py-2 text-sm rounded transition-colors ${
+                  isActive
+                    ? "bg-white/10 text-white border-l-2 border-gold pl-[10px]"
+                    : "text-white/65 hover:text-white hover:bg-white/5"
+                }`
+              }
+            >
+              {link.label}
+            </NavLink>
+          ))}
+        </nav>
+
+        <div className="px-6 py-5 border-t border-white/10">
+          <p className="text-sm text-white">{user?.name}</p>
+          <p className="text-xs text-white/50 capitalize">{user?.role}</p>
+        </div>
+      </aside>
+    </>
   );
 }
