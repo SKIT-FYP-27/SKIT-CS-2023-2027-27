@@ -1,0 +1,25 @@
+{
+  "name": "uei-backend",
+  "version": "1.0.0",
+  "description": "Unified Education Interface (UEI) - Prisma ORM layer over the PostgreSQL schema (schema_v2.sql)",
+  "main": "index.js",
+  "license": "ISC",
+  "scripts": {
+    "prisma:validate": "prisma validate",
+    "prisma:format": "prisma format",
+    "prisma:generate": "prisma generate",
+    "prisma:studio": "prisma studio",
+    "db:pull": "prisma db pull",
+    "db:push": "prisma db push",
+    "test:connection": "ts-node src/test-connection.ts"
+  },
+  "devDependencies": {
+    "prisma": "^5.20.0",
+    "typescript": "^5.6.0",
+    "ts-node": "^10.9.0",
+    "@types/node": "^22.0.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.20.0"
+  }
+}
