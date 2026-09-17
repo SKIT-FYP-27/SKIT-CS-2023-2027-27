@@ -1,6 +1,6 @@
 require('dotenv').config();
 const bcrypt = require('bcryptjs');
-const db = require('../config/db');
+const prisma = require('../config/prisma');
 
 const SEED_USERS = [
     {
@@ -8,11 +8,11 @@ const SEED_USERS = [
         password: 'Student@123',
         role: 'STUDENT',
         profile: {
-            roll_number: 'CS2027-001',
-            registration_no: 'REG2027001',
+            rollNumber: 'CS2027-001',
+            registrationNo: 'REG2027001',
             name: 'Test Student',
             section: 'A',
-            batch_year: '2023-2027',
+            batchYear: '2023-2027',
         },
     },
     {
@@ -20,7 +20,7 @@ const SEED_USERS = [
         password: 'Faculty@123',
         role: 'FACULTY',
         profile: {
-            employee_id: 'EMP001',
+            employeeId: 'EMP001',
             name: 'Test Faculty',
             designation: 'Assistant Professor',
         },
@@ -36,52 +36,47 @@ const SEED_USERS = [
 async function upsertUser({ email, password, role }) {
     const passwordHash = await bcrypt.hash(password, 10);
 
-    const { rows } = await db.query(
-        `INSERT INTO users (email, password_hash, role)
-         VALUES ($1, $2, $3)
-         ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash
-         RETURNING id`,
-        [email, passwordHash, role]
-    );
-
-    return rows[0].id;
+    return prisma.user.upsert({
+        where: { email },
+        update: { passwordHash },
+        create: { email, passwordHash, role },
+    });
 }
 
 async function upsertStudentProfile(userId, profile) {
-    await db.query(
-        `INSERT INTO student_profiles (user_id, roll_number, registration_no, name, section, batch_year)
-         VALUES ($1, $2, $3, $4, $5, $6)
-         ON CONFLICT (user_id) DO NOTHING`,
-        [userId, profile.roll_number, profile.registration_no, profile.name, profile.section, profile.batch_year]
-    );
+    await prisma.studentProfile.upsert({
+        where: { userId },
+        update: {},
+        create: { userId, ...profile },
+    });
 }
 
 async function upsertFacultyProfile(userId, profile) {
-    await db.query(
-        `INSERT INTO faculty_profiles (user_id, employee_id, name, designation)
-         VALUES ($1, $2, $3, $4)
-         ON CONFLICT (user_id) DO NOTHING`,
-        [userId, profile.employee_id, profile.name, profile.designation]
-    );
+    await prisma.facultyProfile.upsert({
+        where: { userId },
+        update: {},
+        create: { userId, ...profile },
+    });
 }
 
 async function run() {
     for (const seedUser of SEED_USERS) {
-        const userId = await upsertUser(seedUser);
+        const user = await upsertUser(seedUser);
 
         if (seedUser.role === 'STUDENT') {
-            await upsertStudentProfile(userId, seedUser.profile);
+            await upsertStudentProfile(user.id, seedUser.profile);
         } else if (seedUser.role === 'FACULTY') {
-            await upsertFacultyProfile(userId, seedUser.profile);
+            await upsertFacultyProfile(user.id, seedUser.profile);
         }
 
         console.log(`Seeded ${seedUser.role} -> ${seedUser.email} / ${seedUser.password}`);
     }
 
-    await db.pool.end();
+    await prisma.$disconnect();
 }
 
-run().catch((err) => {
+run().catch(async (err) => {
     console.error('Seed failed:', err);
+    await prisma.$disconnect();
     process.exit(1);
 });
