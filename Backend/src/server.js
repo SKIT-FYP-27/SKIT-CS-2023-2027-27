@@ -19,7 +19,7 @@ const errorHandler = require('./middleware/errorHandler');
 // API Route Boundaries
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/students', authMiddleware, rbacMiddleware('STUDENT'), studentRoutes);
-app.use('/api/v1/faculty', authMiddleware, rbacMiddleware(['FACULTY', 'HOD']), facultyRoutes);
+app.use('/api/v1/faculty', authMiddleware, rbacMiddleware('FACULTY'), facultyRoutes);
 app.use('/api/v1/hod', authMiddleware, rbacMiddleware('HOD'), hodRoutes);
 
 // Root Endpoint

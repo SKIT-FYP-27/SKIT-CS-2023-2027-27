@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const db = require('../config/db');
+const prisma = require('../config/prisma');
 const ApiError = require('../utils/ApiError');
 const asyncHandler = require('../utils/asyncHandler');
 
@@ -12,17 +12,13 @@ const signToken = (user) =>
 exports.login = asyncHandler(async (req, res, next) => {
     const { email, password } = req.body;
 
-    const { rows } = await db.query(
-        'SELECT id, email, password_hash, role, is_active FROM users WHERE email = $1',
-        [email]
-    );
-    const user = rows[0];
+    const user = await prisma.user.findUnique({ where: { email } });
 
-    if (!user || !user.is_active) {
+    if (!user || !user.isActive) {
         return next(new ApiError(401, 'Invalid email or password'));
     }
 
-    const isMatch = await bcrypt.compare(password, user.password_hash);
+    const isMatch = await bcrypt.compare(password, user.passwordHash);
     if (!isMatch) {
         return next(new ApiError(401, 'Invalid email or password'));
     }
@@ -37,19 +33,19 @@ exports.login = asyncHandler(async (req, res, next) => {
 exports.me = asyncHandler(async (req, res, next) => {
     const { id, role } = req.user;
 
-    const { rows } = await db.query('SELECT id, email, role, is_active FROM users WHERE id = $1', [id]);
-    const user = rows[0];
+    const user = await prisma.user.findUnique({
+        where: { id },
+        select: { id: true, email: true, role: true, isActive: true },
+    });
     if (!user) {
         return next(new ApiError(404, 'User not found'));
     }
 
     let profile = null;
     if (role === 'STUDENT') {
-        const result = await db.query('SELECT * FROM student_profiles WHERE user_id = $1', [id]);
-        profile = result.rows[0] || null;
+        profile = await prisma.studentProfile.findUnique({ where: { userId: id } });
     } else if (role === 'FACULTY') {
-        const result = await db.query('SELECT * FROM faculty_profiles WHERE user_id = $1', [id]);
-        profile = result.rows[0] || null;
+        profile = await prisma.facultyProfile.findUnique({ where: { userId: id } });
     }
 
     res.json({ user, profile });
