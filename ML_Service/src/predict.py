@@ -1,3 +1,4 @@
+from functools import lru_cache
 from pathlib import Path
 
 import joblib
@@ -18,17 +19,29 @@ MODEL_PATH = BASE_DIR / "models" / "risk_model.joblib"
 # Load trained model
 # --------------------------------------------------
 
-bundle = joblib.load(MODEL_PATH)
+@lru_cache(maxsize=1)
+def load_model():
+    """
+    Load and cache the trained risk model.
 
-model = bundle["model"]
-features = bundle["features"]
+    The model is loaded lazily when a prediction is requested.
+    This allows the API layer to return a clean 503 response
+    when the model file is unavailable.
+    """
 
+    if not MODEL_PATH.exists():
+        raise FileNotFoundError(
+            f"ML model not found: {MODEL_PATH}"
+        )
 
-# --------------------------------------------------
-# SHAP explainer
-# --------------------------------------------------
+    bundle = joblib.load(MODEL_PATH)
 
-explainer = shap.TreeExplainer(model)
+    model = bundle["model"]
+    features = bundle["features"]
+
+    explainer = shap.TreeExplainer(model)
+
+    return model, features, explainer
 
 
 # --------------------------------------------------
@@ -106,7 +119,7 @@ def validate_prediction_result(result):
 # SHAP value handling
 # --------------------------------------------------
 
-def get_positive_class_shap(input_data):
+def get_positive_class_shap(input_data, explainer):
     """
     Extract SHAP values representing the at-risk class.
 
@@ -173,6 +186,9 @@ def predict_risk(
     Predict academic risk and explain the prediction.
     """
 
+    # Load the model lazily.
+    model, features, explainer = load_model()
+
     # Validate input values
     validate_inputs(
         current_semester,
@@ -210,7 +226,10 @@ def predict_risk(
     # SHAP explanation
     # --------------------------------------------------
 
-    shap_values = get_positive_class_shap(input_data)
+    shap_values = get_positive_class_shap(
+        input_data,
+        explainer,
+    )
 
     explanations = []
 
