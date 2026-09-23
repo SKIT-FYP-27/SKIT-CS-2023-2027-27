@@ -7,7 +7,7 @@ from ML_Service.src.predict import predict_risk
 router = APIRouter()
 
 
-@router.post("/predict", response_model=PredictionResponse)
+@router.post("/predict-risk", response_model=PredictionResponse)
 def predict_student_risk(request: PredictionRequest):
     """
     Predict the risk level of a student using the trained ML model.
