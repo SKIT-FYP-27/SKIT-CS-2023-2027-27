@@ -1,11 +1,20 @@
 from fastapi import FastAPI
-
+from fastapi.middleware.cors import CORSMiddleware
 from ML_Service.api.routes import router
+
 
 app = FastAPI(
     title="UEI ML Service",
     description="Machine learning service for UEI student risk prediction.",
     version="0.1.0",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 

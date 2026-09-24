@@ -18,7 +18,7 @@ def test_health_endpoint():
 
 def test_predict_endpoint_with_valid_data():
     response = client.post(
-        "/predict",
+        "/predict-risk",
         json={
             "current_semester": 6,
             "current_cgpa": 5.64,
@@ -38,7 +38,7 @@ def test_predict_endpoint_with_valid_data():
 
 def test_predict_endpoint_rejects_invalid_semester():
     response = client.post(
-        "/predict",
+        "/predict-risk",
         json={
             "current_semester": 9,
             "current_cgpa": 5.64,
@@ -51,7 +51,7 @@ def test_predict_endpoint_rejects_invalid_semester():
 
 def test_predict_endpoint_rejects_invalid_cgpa():
     response = client.post(
-        "/predict",
+        "/predict-risk",
         json={
             "current_semester": 6,
             "current_cgpa": 11,
@@ -64,7 +64,7 @@ def test_predict_endpoint_rejects_invalid_cgpa():
 
 def test_predict_endpoint_rejects_invalid_attendance():
     response = client.post(
-        "/predict",
+        "/predict-risk",
         json={
             "current_semester": 6,
             "current_cgpa": 5.64,
@@ -77,10 +77,23 @@ def test_predict_endpoint_rejects_invalid_attendance():
 
 def test_predict_endpoint_requires_all_fields():
     response = client.post(
-        "/predict",
+        "/predict-risk",
         json={
             "current_semester": 6,
         },
     )
 
     assert response.status_code == 422
+
+
+def test_cors_preflight_request():
+    response = client.options(
+        "/predict-risk",
+        headers={
+            "Origin": "http://localhost:3000",
+            "Access-Control-Request-Method": "POST",
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.headers["access-control-allow-origin"] == "http://localhost:3000"

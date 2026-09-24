@@ -1,4 +1,5 @@
 from ML_Service.src.predict import predict_risk
+import pytest
 
 
 def test_prediction_returns_expected_fields():
@@ -45,12 +46,8 @@ def test_prediction_has_valid_risk_level():
         overall_attendance=71.9,
     )
 
-    assert result["risk_level"] in {
-        "LOW",
-        "MEDIUM",
-        "HIGH",
-        "CRITICAL",
-    }
+    assert result["risk_level"] in {"LOW", "MEDIUM", "HIGH"}
+    assert result["risk_level"] != "CRITICAL"
 
 
 def test_prediction_returns_top_factors():
@@ -74,3 +71,20 @@ def test_top_factors_have_expected_structure():
     for factor in result["top_factors"]:
         assert "feature" in factor
         assert "shap_value" in factor
+
+
+def test_prediction_fails_when_model_is_missing(monkeypatch):
+    from ML_Service.src import predict
+
+    monkeypatch.setattr(
+        predict,
+        "MODEL_PATH",
+        predict.MODEL_PATH.parent / "missing_model.joblib",
+    )
+
+    predict.load_model.cache_clear()
+
+    with pytest.raises(FileNotFoundError):
+        predict.load_model()
+
+    predict.load_model.cache_clear()

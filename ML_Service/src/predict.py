@@ -50,13 +50,11 @@ def load_model():
 
 def get_risk_level(probability):
     """
-    Convert predicted risk probability into an application-level
-    risk category.
+    Convert predicted risk probability into a three-class
+    application-level risk category.
     """
 
-    if probability >= 0.75:
-        return "CRITICAL"
-    elif probability >= 0.50:
+    if probability >= 0.50:
         return "HIGH"
     elif probability >= 0.25:
         return "MEDIUM"
