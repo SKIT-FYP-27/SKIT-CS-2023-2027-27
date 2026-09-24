@@ -45,12 +45,8 @@ def test_prediction_has_valid_risk_level():
         overall_attendance=71.9,
     )
 
-    assert result["risk_level"] in {
-        "LOW",
-        "MEDIUM",
-        "HIGH",
-        "CRITICAL",
-    }
+    assert result["risk_level"] in {"LOW", "MEDIUM", "HIGH"}
+    assert result["risk_level"] != "CRITICAL"
 
 
 def test_prediction_returns_top_factors():
