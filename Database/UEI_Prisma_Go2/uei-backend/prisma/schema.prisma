@@ -1,0 +1,416 @@
+// ============================================================
+// UEI — Prisma Schema (Week 1 / Go 1 submission)
+// Mirrors schema_v2.sql exactly: 14 tables, 8 enums, all FKs,
+// all UNIQUE constraints and all CREATE INDEX statements.
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ------------------------------------------------------------
+// Enums (identical values to schema_v2.sql)
+// ------------------------------------------------------------
+enum UserRole {
+  STUDENT
+  FACULTY
+  HOD
+  ADMIN
+
+  @@map("user_role")
+}
+
+enum CourseType {
+  THEORY
+  LAB
+
+  @@map("course_type")
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  EXCUSED
+
+  @@map("attendance_status")
+}
+
+enum InternshipStatus {
+  ONGOING
+  COMPLETED
+
+  @@map("internship_status")
+}
+
+enum AchievementCategory {
+  HACKATHON
+  PUBLICATION
+  CONTEST
+  CERTIFICATION
+  SPORTS
+  CLUB
+
+  @@map("achievement_category")
+}
+
+enum RiskLevel {
+  LOW
+  MEDIUM
+  HIGH
+
+  @@map("risk_level")
+}
+
+enum SkillProficiency {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  EXPERT
+
+  @@map("skill_proficiency")
+}
+
+enum PlacementOutcome {
+  NOT_PLACED
+  IN_PROCESS
+  PLACED
+
+  @@map("placement_outcome")
+}
+
+// ------------------------------------------------------------
+// 1. Users — master auth table
+// ------------------------------------------------------------
+model User {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email        String   @unique @db.VarChar(255)
+  passwordHash String   @map("password_hash") @db.VarChar(255)
+  role         UserRole @default(STUDENT)
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  studentProfile StudentProfile?
+  facultyProfile FacultyProfile?
+  auditLogs      AuditLog[]
+
+  @@map("users")
+}
+
+// ------------------------------------------------------------
+// 2. Student Profiles — Digital Twin & canonical IDs
+// ------------------------------------------------------------
+model StudentProfile {
+  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId            String?   @unique @map("user_id") @db.Uuid
+  rollNumber        String    @unique @map("roll_number") @db.VarChar(50)
+  registrationNo    String    @unique @map("registration_no") @db.VarChar(50)
+  name              String    @db.VarChar(255)
+  branch            String    @default("Computer Science & Engineering") @db.VarChar(100)
+  section           String    @db.VarChar(10)
+  batchYear         String    @map("batch_year") @db.VarChar(20)
+  admissionDate     DateTime? @map("admission_date") @db.Date
+  age               Int?
+  scholarshipStatus Boolean   @default(false) @map("scholarship_status")
+  phone             String?   @db.VarChar(20)
+  aadharNo          String?   @unique @map("aadhar_no") @db.VarChar(20)
+  aparId            String?   @unique @map("apar_id") @db.VarChar(50)
+  aisheId           String?   @map("aishe_id") @db.VarChar(50)
+  currentSemester   Int       @default(1) @map("current_semester")
+  currentCgpa       Float     @default(0.0) @map("current_cgpa")
+  totalCredits      Int       @default(0) @map("total_credits")
+  overallAttendance Float     @default(100.0) @map("overall_attendance")
+  githubUrl         String?   @map("github_url")
+  leetcodeUrl       String?   @map("leetcode_url")
+  linkedinUrl       String?   @map("linkedin_url")
+  resumeUrl         String?   @map("resume_url")
+  avatarUrl         String?   @map("avatar_url")
+  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt         DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  user               User?                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseEnrollments  CourseEnrollment[]
+  placementReadiness PlacementReadiness?
+  weakStudentRadar   WeakStudentRadar[]
+  skills             StudentSkill[]
+  internships        Internship[]
+  achievements       Achievement[]
+  semesterRecords    SemesterRecord[]
+
+  @@index([section], map: "idx_students_section")
+  @@map("student_profiles")
+}
+
+// ------------------------------------------------------------
+// 3. Faculty Profiles
+// ------------------------------------------------------------
+model FacultyProfile {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String?  @unique @map("user_id") @db.Uuid
+  employeeId     String   @unique @map("employee_id") @db.VarChar(50)
+  name           String   @db.VarChar(255)
+  department     String   @default("Computer Science & Engineering") @db.VarChar(100)
+  designation    String   @db.VarChar(100)
+  specialization String?  @db.VarChar(100)
+  phone          String?  @db.VarChar(20)
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  user               User?                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reviewedRiskFlags  WeakStudentRadar[]
+  courseAssignments  FacultyCourseAssignment[]
+  attendanceMarked   AttendanceRecord[]
+
+  @@map("faculty_profiles")
+}
+
+// ------------------------------------------------------------
+// 4. Courses
+// ------------------------------------------------------------
+model Course {
+  id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code        String     @unique @db.VarChar(20)
+  title       String     @db.VarChar(255)
+  semester    Int
+  credits     Int
+  type        CourseType @default(THEORY)
+  description String?
+  createdAt   DateTime   @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt   DateTime   @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  enrollments        CourseEnrollment[]
+  weakStudentRadar    WeakStudentRadar[]
+  facultyAssignments  FacultyCourseAssignment[]
+
+  @@map("courses")
+}
+
+// ------------------------------------------------------------
+// 5. Course Enrollments — M:N bridge (student <-> course)
+// ------------------------------------------------------------
+model CourseEnrollment {
+  id             String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  studentId      String? @map("student_id") @db.Uuid
+  courseId       String? @map("course_id") @db.Uuid
+  academicYear   String  @map("academic_year") @db.VarChar(20)
+  semester       Int
+  internalMarks  Float   @default(0.0) @map("internal_marks")
+  midTermMarks   Float   @default(0.0) @map("mid_term_marks")
+  labMarks       Float   @default(0.0) @map("lab_marks")
+  finalExamMarks Float   @default(0.0) @map("final_exam_marks")
+  totalMarks     Float   @default(0.0) @map("total_marks")
+  grade          String? @db.VarChar(5)
+  isBacklog      Boolean @default(false) @map("is_backlog")
+
+  student           StudentProfile?    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  course            Course?            @relation(fields: [courseId], references: [id])
+  attendanceRecords AttendanceRecord[]
+
+  @@unique([studentId, courseId, academicYear])
+  @@map("course_enrollments")
+}
+
+// ------------------------------------------------------------
+// 6. Placement Readiness
+// ------------------------------------------------------------
+model PlacementReadiness {
+  id                 String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  studentId          String?          @unique @map("student_id") @db.Uuid
+  overallScore       Float            @map("overall_score")
+  technicalScore     Float            @map("technical_score")
+  aptitudeScore      Float            @map("aptitude_score")
+  codingProfileScore Float            @map("coding_profile_score")
+  recommendedActions Json?            @map("recommended_actions")
+  placementStatus    PlacementOutcome @default(NOT_PLACED) @map("placement_status")
+  company            String?          @db.VarChar(200)
+  package            Float?
+  evaluatedAt        DateTime         @default(now()) @map("evaluated_at") @db.Timestamp(6)
+
+  student StudentProfile? @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@map("placement_readiness")
+}
+
+// ------------------------------------------------------------
+// 7. Weak Student Risk Radar — AI/ML predictions + SHAP
+// ------------------------------------------------------------
+model WeakStudentRadar {
+  id                       String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  studentId                String?   @map("student_id") @db.Uuid
+  courseId                 String?   @map("course_id") @db.Uuid
+  riskScore                Float     @map("risk_score")
+  riskLevel                RiskLevel @default(MEDIUM) @map("risk_level")
+  primaryRiskFactor        String    @map("primary_risk_factor")
+  shapExplanation          Json      @map("shap_explanation")
+  flaggedAt                DateTime  @default(now()) @map("flagged_at") @db.Timestamp(6)
+  reviewedByFacultyId      String?   @map("reviewed_by_faculty_id") @db.Uuid
+  facultyInterventionNotes String?   @map("faculty_intervention_notes")
+  isIntervened             Boolean   @default(false) @map("is_intervened")
+  reviewedAt               DateTime? @map("reviewed_at") @db.Timestamp(6)
+
+  student           StudentProfile? @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  course            Course?         @relation(fields: [courseId], references: [id])
+  reviewedByFaculty FacultyProfile? @relation(fields: [reviewedByFacultyId], references: [id])
+
+  @@index([studentId], map: "idx_risk_student")
+  @@index([riskLevel], map: "idx_risk_level")
+  @@map("weak_student_radar")
+}
+
+// ------------------------------------------------------------
+// 8. Attendance Records
+// ------------------------------------------------------------
+model AttendanceRecord {
+  id             String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  enrollmentId   String?           @map("enrollment_id") @db.Uuid
+  facultyId      String?           @map("faculty_id") @db.Uuid
+  attendanceDate DateTime          @map("attendance_date") @db.Date
+  status         AttendanceStatus  @default(PRESENT)
+  remarks        String?
+  markedAt       DateTime          @default(now()) @map("marked_at") @db.Timestamp(6)
+
+  enrollment CourseEnrollment? @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  faculty    FacultyProfile?   @relation(fields: [facultyId], references: [id], onDelete: SetNull)
+
+  @@unique([enrollmentId, attendanceDate])
+  @@index([enrollmentId], map: "idx_attendance_enrollment")
+  @@index([attendanceDate], map: "idx_attendance_date")
+  @@map("attendance_records")
+}
+
+// ------------------------------------------------------------
+// 9. Student Skills
+// ------------------------------------------------------------
+model StudentSkill {
+  id                  String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  studentId           String?          @map("student_id") @db.Uuid
+  skillName           String           @map("skill_name") @db.VarChar(150)
+  category            String?          @db.VarChar(100)
+  proficiencyLevel    SkillProficiency @default(BEGINNER) @map("proficiency_level")
+  progressPct         Float            @default(0.0) @map("progress_pct")
+  isVerified          Boolean          @default(false) @map("is_verified")
+  verificationSource  String?          @map("verification_source") @db.VarChar(100)
+  certificationIssuer String?          @map("certification_issuer") @db.VarChar(150)
+  certificationDate   DateTime?        @map("certification_date") @db.Date
+  credentialId        String?          @map("credential_id") @db.VarChar(150)
+  credentialUrl       String?          @map("credential_url")
+  evidenceUrl         String?          @map("evidence_url")
+  createdAt           DateTime         @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt           DateTime         @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  student StudentProfile? @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId], map: "idx_skills_student")
+  @@map("student_skills")
+}
+
+// ------------------------------------------------------------
+// 10. Internships
+// ------------------------------------------------------------
+model Internship {
+  id             String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  studentId      String?          @map("student_id") @db.Uuid
+  companyName    String           @map("company_name") @db.VarChar(200)
+  roleTitle      String?          @map("role_title") @db.VarChar(150)
+  startDate      DateTime?        @map("start_date") @db.Date
+  endDate        DateTime?        @map("end_date") @db.Date
+  status         InternshipStatus @default(ONGOING)
+  stipend        Float?
+  description    String?
+  certificateUrl String?          @map("certificate_url")
+  createdAt      DateTime         @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt      DateTime         @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  student StudentProfile? @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId], map: "idx_internships_student")
+  @@map("internships")
+}
+
+// ------------------------------------------------------------
+// 11. Achievements
+// ------------------------------------------------------------
+model Achievement {
+  id                  String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  studentId           String?             @map("student_id") @db.Uuid
+  title               String              @db.VarChar(255)
+  category            AchievementCategory @default(CERTIFICATION)
+  description         String?
+  achievedOn          DateTime?           @map("achieved_on") @db.Date
+  issuingOrganization String?             @map("issuing_organization") @db.VarChar(200)
+  proofUrl            String?             @map("proof_url")
+  createdAt           DateTime            @default(now()) @map("created_at") @db.Timestamp(6)
+
+  student StudentProfile? @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId], map: "idx_achievements_student")
+  @@map("achievements")
+}
+
+// ------------------------------------------------------------
+// 12. Semester Records — per-semester SGPA history
+// ------------------------------------------------------------
+model SemesterRecord {
+  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  studentId         String?  @map("student_id") @db.Uuid
+  semester          Int
+  academicYear      String   @map("academic_year") @db.VarChar(20)
+  sgpa              Float?
+  creditsEarned     Int?     @map("credits_earned")
+  creditsRegistered Int?     @map("credits_registered")
+  backlogsCount     Int      @default(0) @map("backlogs_count")
+  resultStatus      String?  @default("PASS") @map("result_status") @db.VarChar(20)
+  publishedAt       DateTime @default(now()) @map("published_at") @db.Timestamp(6)
+
+  student StudentProfile? @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, semester, academicYear])
+  @@index([studentId], map: "idx_semester_records_student")
+  @@map("semester_records")
+}
+
+// ------------------------------------------------------------
+// 13. Faculty Course Assignments — who teaches what, which section
+// ------------------------------------------------------------
+model FacultyCourseAssignment {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  facultyId    String?  @map("faculty_id") @db.Uuid
+  courseId     String?  @map("course_id") @db.Uuid
+  section      String?  @db.VarChar(10)
+  academicYear String   @map("academic_year") @db.VarChar(20)
+  semester     Int
+  assignedAt   DateTime @default(now()) @map("assigned_at") @db.Timestamp(6)
+
+  faculty FacultyProfile? @relation(fields: [facultyId], references: [id], onDelete: Cascade)
+  course  Course?         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([facultyId, courseId, section, academicYear])
+  @@index([facultyId], map: "idx_faculty_assignments_faculty")
+  @@index([courseId], map: "idx_faculty_assignments_course")
+  @@map("faculty_course_assignments")
+}
+
+// ------------------------------------------------------------
+// 14. Audit Logs — system-wide action trail
+// ------------------------------------------------------------
+model AuditLog {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId     String?  @map("user_id") @db.Uuid
+  action     String   @db.VarChar(100)
+  entityType String?  @map("entity_type") @db.VarChar(100)
+  entityId   String?  @map("entity_id") @db.Uuid
+  details    Json?
+  ipAddress  String?  @map("ip_address") @db.VarChar(50)
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId], map: "idx_audit_logs_user")
+  @@index([createdAt], map: "idx_audit_logs_created")
+  @@map("audit_logs")
+}
