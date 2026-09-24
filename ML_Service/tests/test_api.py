@@ -84,3 +84,16 @@ def test_predict_endpoint_requires_all_fields():
     )
 
     assert response.status_code == 422
+
+
+def test_cors_preflight_request():
+    response = client.options(
+        "/predict-risk",
+        headers={
+            "Origin": "http://localhost:3000",
+            "Access-Control-Request-Method": "POST",
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.headers["access-control-allow-origin"] == "http://localhost:3000"
