@@ -30,7 +30,7 @@ The pipeline consists of:
 
 ## Synthetic Dataset
 
-The current development dataset is a synthetic UEI dataset.
+The current development dataset is a synthetic UEI student dataset.
 
 The raw dataset is stored locally under:
 
