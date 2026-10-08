@@ -1,0 +1,2 @@
+# Week 1 data-study scripts (analytics/scripts/explore/)
+openpyxl>=3.1
