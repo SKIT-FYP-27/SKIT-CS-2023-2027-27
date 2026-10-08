@@ -1,0 +1,13 @@
+grade,grade_point,band,is_pass,applies_to,meaning
+O,10,"A, A+ & O",1,credit,Outstanding
+A+,9,"A, A+ & O",1,credit,Excellent
+A,8,"A, A+ & O",1,credit,Very Good
+B+,7,B & B+,1,credit,Good
+B,6,B & B+,1,credit,Above Average
+C,5,P & C,1,credit,Average
+P,4,P & C,1,credit,Pass
+F,0,F,0,credit,Fail (back)
+NP,,Audit,1,audit,Non-credit audit course - passed
+NF,,Audit,0,audit,Non-credit audit course - not passed (does not affect SGPA/result per TR)
+I,0,F,0,credit,Incomplete (counts as not passed until converted; CBCS-2024 s.2.17.10)
+NA,0,F,0,credit,Not allowed - attendance shortage (CBCS-2024 s.2.17.10)
