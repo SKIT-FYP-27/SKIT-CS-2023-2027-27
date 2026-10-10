@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+/* Design tokens: institutional ink + register blue; grade-band colours used by every chart and table */
+@theme static {
+  --font-sans: "IBM Plex Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-serif: "Source Serif 4", "Georgia", "Times New Roman", serif;
+  --color-ink: #1d2433;
+  --color-ink-2: #4a5263;
+  --color-muted: #6b7384;
+  --color-paper: #f6f7f9;
+  --color-surface: #ffffff;
+  --color-rule: #dde2ea;
+  --color-register: #1f4e78;
+  --color-register-soft: #e8eff7;
+  --color-band-f: #d03b3b;
+  --color-band-p: #9ec5f4;
+  --color-band-b: #3987e5;
+  --color-band-a: #184f95;
+  --color-pass: #0b7a0b;
+  --color-fail: #b42f2f;
+}
+
+html, body { background: var(--color-paper); color: var(--color-ink); }
